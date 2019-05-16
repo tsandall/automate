@@ -2,6 +2,7 @@ describe('global projects filter', () => {
   const nonAdminUsername = "nonadmin"
   const proj1  = "cypress-project-1"
   const proj2  = "cypress-project-2"
+  const proj3  = "cypress-project-3"
   const pol_id = "cypress-policy"
 
   before(() => {
@@ -55,7 +56,7 @@ describe('global projects filter', () => {
   })
 
   it('shows allowed projects for non-admin', () => {
-    cy.login('/settings', nonAdminUsername)
+    cy.login('/settings/teams', nonAdminUsername)
     // hide modal unrelated to test flow
     cy.get('app-welcome-modal').invoke('hide')
 
