@@ -39,9 +39,10 @@ func ProfileControlSummary(profile *inspec.Profile) *reportingTypes.NodeControlS
 	summary := reportingTypes.NodeControlSummary{}
 	for _, control := range profile.Controls {
 		summary.Total++
-		if control.Impact == float32(0.0) {
+		if control.Impact == float32(0.0) || control.Impact == float32(0) {
 			// if the control impact is set to 0.0, we do not want the status of
 			// the control to count against profile or report status
+			summary.Informational.Total++
 			continue
 		}
 		switch control.Status() {
