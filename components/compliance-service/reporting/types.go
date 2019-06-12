@@ -12,8 +12,12 @@ type NodeControlSummary struct {
 		Total    int `json:"total"`
 		Minor    int `json:"minor"`
 		Major    int `json:"major"`
+		High     int `json:"high"`
 		Critical int `json:"critical"`
 	} `json:"failed"`
+	Informational struct {
+		Total int `json:"total"`
+	} `json:"informational"`
 }
 
 type ProfileMin struct {

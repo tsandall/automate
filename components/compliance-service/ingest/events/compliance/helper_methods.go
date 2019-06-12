@@ -39,6 +39,11 @@ func ProfileControlSummary(profile *inspec.Profile) *reportingTypes.NodeControlS
 	summary := reportingTypes.NodeControlSummary{}
 	for _, control := range profile.Controls {
 		summary.Total++
+		if control.Impact == float32(0.0) {
+			// if the control impact is set to 0.0, we do not want the status of
+			// the control to count against profile or report status
+			continue
+		}
 		switch control.Status() {
 		case inspec.ResultStatusPassed:
 			summary.Passed.Total++
@@ -65,9 +70,11 @@ func AddControlSummary(total *reportingTypes.NodeControlSummary, sum reportingTy
 	total.Total += sum.Total
 	total.Passed.Total += sum.Passed.Total
 	total.Skipped.Total += sum.Skipped.Total
+	total.Informational.Total += sum.Informational.Total
 	total.Failed.Total += sum.Failed.Total
 	total.Failed.Minor += sum.Failed.Minor
 	total.Failed.Major += sum.Failed.Major
+	total.Failed.High += sum.Failed.High
 	total.Failed.Critical += sum.Failed.Critical
 }
 
@@ -75,8 +82,10 @@ func AddControlSummary(total *reportingTypes.NodeControlSummary, sum reportingTy
 func ReportComplianceStatus(summary *reportingTypes.NodeControlSummary) (status string) {
 	if summary.Failed.Total > 0 {
 		status = inspec.ResultStatusFailed
-	} else if summary.Total == summary.Skipped.Total {
+	} else if summary.Total == (summary.Skipped.Total + summary.Informational.Total) {
 		status = inspec.ResultStatusSkipped
+	} else if summary.Total == summary.Informational.Total {
+		status = inspec.ResultStatusInformational
 	} else {
 		status = inspec.ResultStatusPassed
 	}
