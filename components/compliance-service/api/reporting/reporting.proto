@@ -47,12 +47,14 @@ message Failed {
 	int32 minor = 2;
 	int32 major = 3;
 	int32 critical = 4;
+	int32 high = 5;
 }
 message ControlSummary {
 	int32 total = 1;
 	Total passed = 2;
 	Total skipped = 3;
 	Failed failed = 4;
+	Total informational = 5;
 }
 message Reports {
 	repeated Report reports = 1;
@@ -190,6 +192,7 @@ message ProfileCounts {
 	int32 failed = 2;
 	int32 skipped = 3;
 	int32 passed = 4;
+	int32 informational = 5;
 }
 message ProfileMin {
 	string name = 1;

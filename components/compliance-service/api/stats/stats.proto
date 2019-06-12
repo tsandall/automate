@@ -46,6 +46,8 @@ message ControlsSummary {
 	int32 criticals = 4;
 	int32 passed = 5;
 	int32 skipped = 6;
+	int32 informational = 7;
+	int32 high = 8;
 }
 
 message NodeSummary {
@@ -73,6 +75,7 @@ message Trend {
 	int32 passed = 2;
 	int32 failed = 3;
 	int32 skipped = 4;
+	int32 informational = 5;
 }
 message Trends {
 	repeated Trend trends = 1;
@@ -91,6 +94,8 @@ message ProfileList {
 	int32 criticals = 6;
 	int32 passed = 7;
 	int32 skipped = 8;
+	int32 high = 9;
+	int32 informational = 10;
 }
 
 message ProfileSummary {
@@ -113,6 +118,7 @@ message ProfileSummaryStats {
 	int32 skipped = 3;
 	int32 failed_nodes = 4;
 	int32 total_nodes = 5;
+	int32 informational = 6;
 }
 
 message ControlStats {
@@ -122,6 +128,7 @@ message ControlStats {
 	int32 failed = 4;
 	int32 skipped = 5;
 	float impact = 6;
+	int32 informational = 7;
 }
 message Support {
 	string os_name = 1 [json_name = "os-name"];
