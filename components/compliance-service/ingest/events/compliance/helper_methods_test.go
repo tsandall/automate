@@ -28,7 +28,7 @@ func TestSummary(t *testing.T) {
     "controls":[
       {
         "id":"ctrl-01",
-        "impact": 0,
+        "impact": 0.7,
         "title": "Checking for something1",
         "refs": [],
         "tags": {},
@@ -48,7 +48,7 @@ func TestSummary(t *testing.T) {
         "id":"ctrl-02",
         "refs": [],
         "tags": {},
-        "impact": 0.8,
+        "impact": 0.0,
         "results":[ {"status":"failed"}, {"status":"passed"} ]
       },{
         "id":"ctrl-03",
@@ -56,18 +56,27 @@ func TestSummary(t *testing.T) {
         "tags": {},
         "impact": 1.0,
         "results":[ {"status":"skipped"} ]
+	  },
+	  {
+        "id":"ctrl-04",
+        "refs": [],
+        "tags": {},
+        "impact": 0.9,
+        "results":[ {"status":"failed"} ]
       }
     ],
     "status": "loaded"
   }`
 	profile1 := parseProfile(&p1json)
 	summary1 := ProfileControlSummary(profile1)
-	assert.Equal(t, 3, summary1.Total, "3 total controls in profile")
+	assert.Equal(t, 4, summary1.Total, "4 total controls in profile")
 	assert.Equal(t, 1, summary1.Passed.Total, "1 passed control in profile")
 	assert.Equal(t, 1, summary1.Skipped.Total, "1 skipped control in profile")
 	assert.Equal(t, 1, summary1.Failed.Total, "1 failed control in profile")
 	assert.Equal(t, 1, summary1.Failed.Critical, "1 critical failed control in profile")
 	assert.Equal(t, 0, summary1.Failed.Major, "0 major failed control in profile")
+	assert.Equal(t, 0, summary1.Failed.High, "0 high failed control in profile")
+	assert.Equal(t, 1, summary1.Informational.Total, "0 informational control in profile")
 
 	// ------------------------------- ProfileControlSummary test --------------------------------- //
 
@@ -81,17 +90,20 @@ func TestSummary(t *testing.T) {
       {
         "id":"sysctl-01",
         "refs": [],
-        "tags": {},
+		"tags": {},
+		"impact": 0.6,
         "results":[ {"status":"passed"}, {"status":"passed"} ]
       },{
         "refs": [],
         "tags": {},
-        "id":"sysctl-02",
+		"id":"sysctl-02",
+		"impact": 0.3,
         "results":[ {"status":"passed"}, {"status":"skipped"} ]
       },{
         "refs": [],
         "tags": {},
-        "id":"sysctl-03",
+		"id":"sysctl-03",
+		"impact": 0.9,
         "results":[ {"status":"passed"} ]
       }
     ],
@@ -127,16 +139,17 @@ func TestSummary(t *testing.T) {
 	}
 
 	AddControlSummary(summary2, *summary1)
-	assert.Equal(t, 6, summary2.Total, "6 total controls in profile")
+	assert.Equal(t, 7, summary2.Total, "7 total controls in profile")
 	assert.Equal(t, 2, summary2.Skipped.Total, "2 skipped control in profile")
 	assert.Equal(t, 1, summary2.Failed.Total, "1 failed control in profile")
 	assert.Equal(t, 3, summary2.Passed.Total, "3 passed control in profile")
+	assert.Equal(t, 1, summary2.Informational.Total, "1 informational control in profile")
 
 	// ------------------------------- Control Status and ImpactName tests --------------------------------- //
 
 	ctrl := inspec.Control{Id: "one", Impact: 0}
 	assert.Equal(t, inspec.ResultStatusPassed, ctrl.Status(), "Control with no results is passed")
-	assert.Equal(t, inspec.ControlImpactMinor, ctrl.ImpactName(), "Control is minor")
+	assert.Equal(t, inspec.ControlImpactInformational, ctrl.ImpactName(), "Control is informational")
 
 	ctrl = inspec.Control{Id: "two", Impact: 0.1234, Results: []*inspec.Result{{Status: inspec.ResultStatusSkipped}, {Status: inspec.ResultStatusSkipped}}}
 	assert.Equal(t, inspec.ResultStatusSkipped, ctrl.Status(), "Control is skipped")
@@ -152,7 +165,7 @@ func TestSummary(t *testing.T) {
 
 	ctrl = inspec.Control{Id: "five", Impact: 0.7, Results: []*inspec.Result{{Status: inspec.ResultStatusFailed}, {Status: inspec.ResultStatusPassed}}}
 	assert.Equal(t, inspec.ResultStatusFailed, ctrl.Status(), "Control is failed")
-	assert.Equal(t, inspec.ControlImpactCritical, ctrl.ImpactName(), "Control is critical")
+	assert.Equal(t, inspec.ControlImpactHigh, ctrl.ImpactName(), "Control is high")
 
 	ctrl = inspec.Control{Id: "six", Impact: 1.0, Results: []*inspec.Result{{Status: inspec.ResultStatusPassed}, {Status: inspec.ResultStatusFailed}}}
 	assert.Equal(t, inspec.ResultStatusFailed, ctrl.Status(), "Control is failed")

@@ -8,7 +8,7 @@
     "controls": [
       {
         "id": "ctrl-01",
-        "impact": 0,
+        "impact": 0.7,
         "title": "Checking for something1",
         "status": "passed",
         "results": [
@@ -26,7 +26,7 @@
       },
       {
         "id": "ctrl-02",
-        "impact": 0.8,
+        "impact": 0.0,
         "title": "",
         "status": "failed",
         "results": [
@@ -44,7 +44,7 @@
       },
       {
         "id": "ctrl-03",
-        "impact": 1,
+        "impact": 1.0,
         "title": "",
         "status": "skipped",
         "results": [
@@ -54,10 +54,24 @@
             "run_time": 0
           }
         ]
+      },
+      {
+        "id": "ctrl-04",
+        "refs": [],
+        "tags": {},
+        "impact": 0.9,
+        "status": "failed",
+        "results": [
+          {
+            "status": "failed",
+            "code_desc": "",
+            "run_time": 0
+          }
+        ]
       }
     ],
     "controls_sums": {
-      "total": 3,
+      "total": 4,
       "passed": {
         "total": 1
       },
@@ -69,6 +83,9 @@
         "minor": 0,
         "major": 0,
         "critical": 1
+      },
+      "informational": {
+        "total": 1
       }
     }
   },
@@ -82,6 +99,7 @@
       {
         "id": "sysctl-01",
         "status": "passed",
+        "impact": 0.6,
         "results": [
           {
             "status": "passed",
@@ -98,6 +116,7 @@
       {
         "id": "sysctl-02",
         "status": "skipped",
+        "impact": 0.3,
         "results": [
           {
             "status": "passed",
@@ -114,6 +133,7 @@
       {
         "id": "sysctl-03",
         "status": "passed",
+        "impact": 0.9,
         "results": [
           {
             "status": "passed",

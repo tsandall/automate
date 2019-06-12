@@ -13,7 +13,7 @@
         "id": "ctrl-01",
         "code": "control 'ctrl-01' do ...",
         "desc": "",
-        "impact": 0,
+        "impact": 0.7,
         "title": "Checking for something1",
         "source_location": {
           "ref": "",
@@ -26,7 +26,7 @@
         "id": "ctrl-02",
         "code": "",
         "desc": "",
-        "impact": 0.8,
+        "impact": 0.0,
         "title": "",
         "source_location": {
           "ref": "",
@@ -39,7 +39,20 @@
         "id": "ctrl-03",
         "code": "",
         "desc": "",
-        "impact": 1,
+        "impact": 1.0,
+        "title": "",
+        "source_location": {
+          "ref": "",
+          "line": 0
+        },
+        "refs": "[]",
+        "tags": "{}"
+      },
+      {
+        "id": "ctrl-04",
+        "code": "",
+        "desc": "",
+        "impact": 0.9,
         "title": "",
         "source_location": {
           "ref": "",
@@ -70,7 +83,7 @@
         "id": "sysctl-01",
         "code": "",
         "desc": "",
-        "impact": 0,
+        "impact": 0.6,
         "title": "",
         "source_location": {
           "ref": "",
@@ -83,7 +96,7 @@
         "id": "sysctl-02",
         "code": "",
         "desc": "",
-        "impact": 0,
+        "impact": 0.3,
         "title": "",
         "source_location": {
           "ref": "",
@@ -96,7 +109,7 @@
         "id": "sysctl-03",
         "code": "",
         "desc": "",
-        "impact": 0,
+        "impact": 0.9,
         "title": "",
         "source_location": {
           "ref": "",
