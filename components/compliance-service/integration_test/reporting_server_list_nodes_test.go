@@ -361,6 +361,7 @@ func TestListNodesWildcardFiltering(t *testing.T) {
 			},
 			expectedIds: []string{"3", "2"},
 		},
+<<<<<<< HEAD
 		{
 			description: "chef_server: case insensitive wildcard 1",
 			reports: []*relaxting.ESInSpecReport{
@@ -413,6 +414,8 @@ func TestListNodesWildcardFiltering(t *testing.T) {
 			},
 			expectedIds: []string{"1", "2"},
 		},
+=======
+>>>>>>> 01542a9f93ee1429a9a0225ef315b56b8e030bd9
 
 		// chef tags
 		{
@@ -467,6 +470,7 @@ func TestListNodesWildcardFiltering(t *testing.T) {
 			},
 			expectedIds: []string{"3", "2"},
 		},
+<<<<<<< HEAD
 		{
 			description: "chef_tags: case insensitive wildcard 1",
 			reports: []*relaxting.ESInSpecReport{
@@ -519,6 +523,8 @@ func TestListNodesWildcardFiltering(t *testing.T) {
 			},
 			expectedIds: []string{"1", "2"},
 		},
+=======
+>>>>>>> 01542a9f93ee1429a9a0225ef315b56b8e030bd9
 
 		// environment
 		{
@@ -573,6 +579,7 @@ func TestListNodesWildcardFiltering(t *testing.T) {
 			},
 			expectedIds: []string{"3", "2"},
 		},
+<<<<<<< HEAD
 		{
 			description: "environment: case insensitive wildcard 1",
 			reports: []*relaxting.ESInSpecReport{
@@ -625,6 +632,8 @@ func TestListNodesWildcardFiltering(t *testing.T) {
 			},
 			expectedIds: []string{"1", "2"},
 		},
+=======
+>>>>>>> 01542a9f93ee1429a9a0225ef315b56b8e030bd9
 
 		// node
 		{
@@ -679,6 +688,7 @@ func TestListNodesWildcardFiltering(t *testing.T) {
 			},
 			expectedIds: []string{"3", "2"},
 		},
+<<<<<<< HEAD
 		{
 			description: "node: case insensitive wildcard 1",
 			reports: []*relaxting.ESInSpecReport{
@@ -731,6 +741,8 @@ func TestListNodesWildcardFiltering(t *testing.T) {
 			},
 			expectedIds: []string{"1", "2"},
 		},
+=======
+>>>>>>> 01542a9f93ee1429a9a0225ef315b56b8e030bd9
 
 		// organization
 		{
@@ -785,6 +797,7 @@ func TestListNodesWildcardFiltering(t *testing.T) {
 			},
 			expectedIds: []string{"3", "2"},
 		},
+<<<<<<< HEAD
 		{
 			description: "organization: case insensitive wildcard 1",
 			reports: []*relaxting.ESInSpecReport{
@@ -837,6 +850,8 @@ func TestListNodesWildcardFiltering(t *testing.T) {
 			},
 			expectedIds: []string{"1", "2"},
 		},
+=======
+>>>>>>> 01542a9f93ee1429a9a0225ef315b56b8e030bd9
 
 		// platform
 		{
@@ -927,6 +942,7 @@ func TestListNodesWildcardFiltering(t *testing.T) {
 			},
 			expectedIds: []string{"3", "2"},
 		},
+<<<<<<< HEAD
 		{
 			description: "platform: case insensitive wildcard 1",
 			reports: []*relaxting.ESInSpecReport{
@@ -959,12 +975,34 @@ func TestListNodesWildcardFiltering(t *testing.T) {
 					}{
 						Name: "A1-dev",
 					},
+=======
+
+		// Policy group
+		{
+			description: "policy_group: '*' wildcard",
+			reports: []*relaxting.ESInSpecReport{
+				{
+					NodeID:      "1",
+					PolicyGroup: "a2-prod",
+				},
+				{
+					NodeID:      "2",
+					PolicyGroup: "a2-dev",
+				},
+				{
+					NodeID:      "3",
+					PolicyGroup: "a1-dev",
+>>>>>>> 01542a9f93ee1429a9a0225ef315b56b8e030bd9
 				},
 			},
 			query: reporting.Query{
 				Filters: []*reporting.ListFilter{
 					{
+<<<<<<< HEAD
 						Type:   "platform",
+=======
+						Type:   "policy_group",
+>>>>>>> 01542a9f93ee1429a9a0225ef315b56b8e030bd9
 						Values: []string{"a2-*"},
 					},
 				},
@@ -972,6 +1010,7 @@ func TestListNodesWildcardFiltering(t *testing.T) {
 			expectedIds: []string{"1", "2"},
 		},
 		{
+<<<<<<< HEAD
 			description: "platform: case insensitive wildcard 2",
 			reports: []*relaxting.ESInSpecReport{
 				{
@@ -1045,6 +1084,9 @@ func TestListNodesWildcardFiltering(t *testing.T) {
 		},
 		{
 			description: "policy_group: '?' wildcard",
+=======
+			description: "policy_group: '?' wildcard",
+>>>>>>> 01542a9f93ee1429a9a0225ef315b56b8e030bd9
 			reports: []*relaxting.ESInSpecReport{
 				{
 					NodeID:      "2",
@@ -1069,6 +1111,7 @@ func TestListNodesWildcardFiltering(t *testing.T) {
 			},
 			expectedIds: []string{"3", "2"},
 		},
+<<<<<<< HEAD
 		{
 			description: "policy_group: case insensitive wildcard 1",
 			reports: []*relaxting.ESInSpecReport{
@@ -1121,6 +1164,8 @@ func TestListNodesWildcardFiltering(t *testing.T) {
 			},
 			expectedIds: []string{"1", "2"},
 		},
+=======
+>>>>>>> 01542a9f93ee1429a9a0225ef315b56b8e030bd9
 
 		// Policy Name
 		{
@@ -1175,6 +1220,7 @@ func TestListNodesWildcardFiltering(t *testing.T) {
 			},
 			expectedIds: []string{"3", "2"},
 		},
+<<<<<<< HEAD
 		{
 			description: "policy_name: case insensitive wildcard 1",
 			reports: []*relaxting.ESInSpecReport{
@@ -1227,6 +1273,8 @@ func TestListNodesWildcardFiltering(t *testing.T) {
 			},
 			expectedIds: []string{"1", "2"},
 		},
+=======
+>>>>>>> 01542a9f93ee1429a9a0225ef315b56b8e030bd9
 
 		// Recipe
 		{
@@ -1281,6 +1329,7 @@ func TestListNodesWildcardFiltering(t *testing.T) {
 			},
 			expectedIds: []string{"3", "2"},
 		},
+<<<<<<< HEAD
 		{
 			description: "recipe: case insensitive wildcard 1",
 			reports: []*relaxting.ESInSpecReport{
@@ -1333,6 +1382,8 @@ func TestListNodesWildcardFiltering(t *testing.T) {
 			},
 			expectedIds: []string{"1", "2"},
 		},
+=======
+>>>>>>> 01542a9f93ee1429a9a0225ef315b56b8e030bd9
 
 		// Roles
 		{
@@ -1387,6 +1438,7 @@ func TestListNodesWildcardFiltering(t *testing.T) {
 			},
 			expectedIds: []string{"3", "2"},
 		},
+<<<<<<< HEAD
 		{
 			description: "role: case insensitive wildcard 1",
 			reports: []*relaxting.ESInSpecReport{
@@ -1439,6 +1491,8 @@ func TestListNodesWildcardFiltering(t *testing.T) {
 			},
 			expectedIds: []string{"1", "2"},
 		},
+=======
+>>>>>>> 01542a9f93ee1429a9a0225ef315b56b8e030bd9
 
 		// Profile
 		{
@@ -1479,6 +1533,7 @@ func TestListNodesWildcardFiltering(t *testing.T) {
 			},
 			expectedIds: []string{"1", "2"},
 		},
+<<<<<<< HEAD
 		{
 			description: "Profile: case insensitive wildcard 1",
 			reports: []*relaxting.ESInSpecReport{
@@ -1555,6 +1610,8 @@ func TestListNodesWildcardFiltering(t *testing.T) {
 			},
 			expectedIds: []string{"1", "2"},
 		},
+=======
+>>>>>>> 01542a9f93ee1429a9a0225ef315b56b8e030bd9
 
 		// control
 		{
@@ -1608,6 +1665,7 @@ func TestListNodesWildcardFiltering(t *testing.T) {
 			expectedIds: []string{"1", "2"},
 		},
 		{
+<<<<<<< HEAD
 			description: "control: case insensitive wildcard 1",
 			reports: []*relaxting.ESInSpecReport{
 				{
@@ -1708,6 +1766,8 @@ func TestListNodesWildcardFiltering(t *testing.T) {
 			expectedIds: []string{"1", "2"},
 		},
 		{
+=======
+>>>>>>> 01542a9f93ee1429a9a0225ef315b56b8e030bd9
 			description: "control: '*' wildcard one node with two matching controls",
 			reports: []*relaxting.ESInSpecReport{
 				{

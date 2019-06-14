@@ -6,8 +6,8 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/golang/protobuf/ptypes/wrappers"
 	"github.com/spf13/cobra"
-	"github.com/spf13/pflag"
 	"google.golang.org/grpc/codes"
 	grpc_status "google.golang.org/grpc/status"
 
@@ -106,9 +106,9 @@ func newIAMUpgradeToV2Cmd() *cobra.Command {
 		false,
 		"Upgrade to version 2.1 with beta project authorization.")
 
-	// all flags are hidden right now
-	cmd.PersistentFlags().VisitAll(func(f *pflag.Flag) { f.Hidden = !isDevMode() })
-
+	if !isDevMode() {
+		_ = cmd.PersistentFlags().MarkHidden("beta2.1")
+	}
 	return cmd
 }
 
@@ -421,7 +421,7 @@ func runCreateTokenCmd(cmd *cobra.Command, args []string) error {
 	tokenResp, err := apiClient.TokensV2Client().CreateToken(ctx, &policies_req.CreateTokenReq{
 		Id:     id,
 		Name:   name,
-		Active: true,
+		Active: &wrappers.BoolValue{Value: true},
 		// TODO (tc): Might want to let them specify a --projects list somehow eventually.
 		Projects: []string{},
 	})
