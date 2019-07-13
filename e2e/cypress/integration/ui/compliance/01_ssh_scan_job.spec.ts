@@ -23,14 +23,14 @@ describe('create a manual node ssh scan job and cleanup after', () => {
     cy.route('POST', '/api/v0/secrets/search').as('getSecrets')
 
     // click on node credentials in sidebar
-    cy.get('chef-sidebar-entry').contains('Node Credentials').click()
+    cy.get('chef-sidebar-entry').contains('Node Credentials').click({ force: true })
     cy.url().should('include', '/settings/node-credentials')
 
     // wait for data to return
     cy.wait('@getSecrets')
 
     // click on add credential button to open create form
-    cy.contains('Add Credential').click().then(() => {
+    cy.contains('Add Credential').click({ force: true }).then(() => {
       cy.url().should('include', '/settings/node-credentials/add')
 
       // fill in name for credential, username, and password
@@ -43,7 +43,7 @@ describe('create a manual node ssh scan job and cleanup after', () => {
       cy.route('POST', '/api/v0/secrets').as('createSecret')
 
       // save the credential
-      cy.contains('Save').click().then(() => {
+      cy.contains('Save').click({ force: true }).then(() => {
 
         cy.url().should('include', '/settings/node-credentials')
 
@@ -72,14 +72,15 @@ describe('create a manual node ssh scan job and cleanup after', () => {
     cy.route('POST', '/api/v0/nodes/search').as('getNodes')
 
     // click on nodes tab
-    cy.get('.nav-tab').contains('Nodes added').click().then(() => {
+    cy.get('.nav-tab').contains('Nodes added').click({ force: true }).then(() => {
       cy.url().should('include', '/compliance/scan-jobs/nodes')
 
       // wait for data to return
       cy.wait('@getNodes')
 
       // click on add node button to open create form
-      cy.contains('Add Nodes').parent().invoke('show').click().then(() => {
+      cy.scrollTo('top')
+      cy.contains('Add Nodes').parent().invoke('show').click({ force: true }).then(() => {
         cy.url().should('include', '/compliance/scan-jobs/nodes/add')
 
         // fill in hostname and select a credential for the node
@@ -93,7 +94,7 @@ describe('create a manual node ssh scan job and cleanup after', () => {
         cy.route('POST', '/api/v0/nodes/bulk-create').as('createNode')
 
         // save the node
-        cy.get('chef-button').contains('Add 1 Node(s)').click().then(() => {
+        cy.get('chef-button').contains('Add 1 Node(s)').click({ force: true }).then(() => {
 
           cy.url().should('include', '/compliance/scan-jobs/nodes')
 
@@ -210,7 +211,7 @@ describe('create a manual node ssh scan job and cleanup after', () => {
     // delete the credential
     cy.contains(credName).parent().parent().find('chef-control-menu').as('row-menu')
     cy.get('@row-menu').click().then(() => {
-      cy.get('@row-menu').find('[data-cy=delete]').click({force: true})
+      cy.get('@row-menu').find('[data-cy=delete]').click({ force: true })
     })
   })
   it('can delete the created node', () => {
