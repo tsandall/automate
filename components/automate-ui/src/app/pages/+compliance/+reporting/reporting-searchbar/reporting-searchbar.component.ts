@@ -24,8 +24,8 @@ export class ReportingSearchbarComponent implements OnInit {
   visibleDate;
   selectedType;
 
-  @ViewChild('keyInput') keyInput;
-  @ViewChild('valInput') valInput;
+  @ViewChild('keyInput', { static: true }) keyInput;
+  @ViewChild('valInput', { static: true }) valInput;
 
   ngOnInit() {
     this.visibleDate = new Date(this.date);

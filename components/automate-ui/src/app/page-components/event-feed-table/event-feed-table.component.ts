@@ -23,7 +23,7 @@ export class EventFeedTableComponent implements OnDestroy, OnInit {
   groupedEventsButton;
   private selectedOrgs: string[];
   private selectedChefServers: string[];
-  @ViewChild('groupSidePanel') sidepanel: ElementRef;
+  @ViewChild('groupSidePanel', { static: true }) sidepanel: ElementRef;
   private subscription: Subscription;
   private isDestroyed = new Subject<boolean>();
 

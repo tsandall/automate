@@ -23,7 +23,7 @@ export class OverviewFailuresComponent implements OnChanges, OnDestroy {
 
   @Input() vbHeight = 300;
 
-  @ViewChild('svg') svg;
+  @ViewChild('svg', { static: true }) svg;
 
   id: string;
 
