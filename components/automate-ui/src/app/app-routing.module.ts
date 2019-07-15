@@ -151,7 +151,7 @@ const routes: Routes = [
         },
         {
           path: 'node-credentials',
-          loadChildren: './pages/+compliance/+credentials/credentials.module#CredentialsModule'
+          loadChildren: () => import('./pages/+compliance/+credentials/credentials.module').then(m => m.CredentialsModule)
         },
         {
           path: 'notifications',
@@ -179,7 +179,7 @@ const routes: Routes = [
     },
     {
       path: 'compliance',
-      loadChildren: 'app/pages/+compliance/compliance.module#ComplianceModule'
+      loadChildren: () => import('app/pages/+compliance/compliance.module').then(m => m.ComplianceModule)
     },
     {
       path: 'client-runs',
@@ -257,7 +257,7 @@ const routes: Routes = [
       // we don't want require in the code base because it leads people to use libraries that
       // mutate the dom outside of angular's change detection.
       path: 'component_library',
-      loadChildren: 'app/pages/component-library/component-library.module#ComponentLibraryModule'
+      loadChildren: () => import('app/pages/component-library/component-library.module').then(m => m.ComponentLibraryModule)
     }
     ]
   },
