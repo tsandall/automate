@@ -171,9 +171,6 @@ import { RunSummaryComponent } from './page-components/run-summary/run-summary.c
 import {
   SelectListItemComponent
 } from './page-components/select-list-item/select-list-item.component';
-import {
-  ServicesSidebarComponent
-} from './page-components/services-sidebar/services-sidebar.component';
 import { ServiceGroupsComponent } from './pages/service-groups/service-groups.component';
 import {
   ServerOrgFilterSidebarComponent
@@ -185,6 +182,9 @@ import {
 import { SigninComponent } from './pages/signin/signin.component';
 import { TeamCreateComponent } from './pages/team-create/team-create.component';
 import { TeamDetailsComponent } from './pages/team-details/team-details.component';
+import {
+  ServicesSidebarComponent
+} from './page-components/services-sidebar/services-sidebar.component';
 import { TeamManagementComponent } from './pages/team-management/team-management.component';
 import {
   TelemetryCheckboxComponent
@@ -202,10 +202,10 @@ import { WelcomeModalComponent } from './page-components/welcome-modal/welcome-m
 @NgModule({
   declarations: [
     // Page Components
-    AutomateSettingsComponent,
     AppComponent,
     ApplicationsComponent,
     AttributesComponent,
+    AutomateSettingsComponent,
     ClientRunsComponent,
     ClientRunsSearchBarComponent,
     ClientRunsSearchFiltersComponent,
