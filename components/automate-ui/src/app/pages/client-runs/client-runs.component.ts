@@ -258,8 +258,8 @@ export class ClientRunsComponent implements OnInit, OnDestroy {
     this.selectedStatus$ = this.store.select(createSelector(clientRunsState,
       (state) => state.nodeFilter.status));
 
-    this.totalNumberOfNodesWithStatusFilter$ = combineLatest(
-      this.selectedStatus$, this.nodeCounts$)
+    this.totalNumberOfNodesWithStatusFilter$ = combineLatest([
+      this.selectedStatus$, this.nodeCounts$])
       .pipe(
         map(([status, nodeCount]) => {
           switch (status) {
@@ -300,13 +300,13 @@ export class ClientRunsComponent implements OnInit, OnDestroy {
 
     this.columns$ = this.store.select(clientRunsColumns);
 
-    combineLatest(
+    combineLatest([
       this.store.select(createSelector(
         state => state.sidebar, (state) => state.selectedOrgs)),
       this.store.select(createSelector(
         state => state.sidebar, (state) => state.selectedChefServers)),
       this.store.select(createSelector(
-        clientRunsState, (state) => state.nodeFilter)))
+        clientRunsState, (state) => state.nodeFilter))])
       .pipe(
         map(([selectedOrgs, selectedChefServers, nodeFilter]) => {
           nodeFilter.organizations = selectedOrgs;
@@ -323,10 +323,10 @@ export class ClientRunsComponent implements OnInit, OnDestroy {
       // We want to report total nodes to telemetry, but only when there are no
     // filters. This way we can see how many nodes a customer has connected to
     // automate in total.
-    combineLatest(
+    combineLatest([
       this.nodeCounts$.pipe(distinctUntilKeyChanged('total')),
       this.numberOfSearchBarFilters$.pipe(distinctUntilChanged())
-    )
+    ])
     .pipe(takeUntil(this.isDestroyed))
     .subscribe(([nodeCounts, filterCount]) => {
       if ( filterCount === 0 && nodeCounts.total > 0 ) {

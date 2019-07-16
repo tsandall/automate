@@ -77,9 +77,9 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
     // combineLatest depends on the user object existing already.
     this.user = <User>{};
 
-    this.done$ = <Observable<boolean>>combineLatest(
+    this.done$ = <Observable<boolean>>combineLatest([
       store.select(allUsers),
-      store.select(userStatus))
+      store.select(userStatus)])
       .pipe(
         map(([state, status]) => {
           const id = this.user.id;

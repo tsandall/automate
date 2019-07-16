@@ -36,10 +36,10 @@ export class ProjectDetailsComponent implements OnDestroy {
       name: ['Loading...']
     });
 
-    combineLatest(
+    combineLatest([
       this.store.select(getStatus),
       this.store.select(updateStatus)
-    ).pipe(
+    ]).pipe(
       takeUntil(this.isDestroyed),
       map(([gStatus, uStatus]) => {
         this.isLoading =
