@@ -5,7 +5,6 @@ import { MockComponent } from 'ng2-mock-component';
 import { StoreModule, Store } from '@ngrx/store';
 
 import { NgrxStateAtom } from 'app/ngrx.reducers';
-import { policyEntityReducer } from 'app/entities/policies/policy.reducer';
 import {
   userEntityReducer,
   UserEntityInitialState
@@ -69,8 +68,7 @@ describe('TeamDetailsComponent', () => {
         StoreModule.forRoot({
           router: routerReducer,
           teams: teamEntityReducer,
-          users: userEntityReducer,
-          policies: policyEntityReducer
+          users: userEntityReducer
         }, { initialState })
       ]
     }).compileComponents();
