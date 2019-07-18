@@ -43,7 +43,8 @@ module.exports = function (wallaby) {
       ...projects.map(project => ({
         pattern: project.sourceRoot + specPattern,
         load: false
-      }))
+      })),
+      { pattern: 'e2e/**/*.e2e-spec.ts', load: false }
     ],
 
     testFramework: 'jasmine',
