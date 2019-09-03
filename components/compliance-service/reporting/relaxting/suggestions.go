@@ -27,19 +27,21 @@ func (backend ES2Backend) GetSuggestions(typeParam string, filters map[string][]
 	}
 
 	var SUGGESTIONS_TYPES = map[string]string{
-		"environment":    "environment",
-		"platform":       "platform.name",
-		"node":           "node_name",
-		"role":           "roles",
-		"recipe":         "recipes",
-		"profile":        "profiles.title",
-		"control":        "profiles.controls.title",
-		"organization":   "organization_name",
-		"chef_server":    "source_fqdn",
-		"chef_tags":      "chef_tags",
-		"policy_group":   "policy_group",
-		"policy_name":    "policy_name",
-		"inspec_version": "version",
+		"environment":       "environment",
+		"platform":          "platform.name",
+		"node":              "node_name",
+		"role":              "roles",
+		"recipe":            "recipes",
+		"profile":           "profiles.title",
+		"control":           "profiles.controls.title",
+		"organization":      "organization_name",
+		"chef_server":       "source_fqdn",
+		"chef_tags":         "chef_tags",
+		"policy_group":      "policy_group",
+		"policy_name":       "policy_name",
+		"inspec_version":    "version",
+		"control_tag_key":   "profiles.controls.string_tags.key",
+		"control_tag_value": "profiles.controls.string_tags.values",
 	}
 
 	target, ok := SUGGESTIONS_TYPES[typeParam]
@@ -70,7 +72,7 @@ func (backend ES2Backend) GetSuggestions(typeParam string, filters map[string][]
 	} else {
 		// Going through all filters to find the ones prefixed with 'control_tag', e.g. 'control_tag:nist'
 		for filterType := range filters {
-			if strings.HasPrefix(filterType, "control_tag:") {
+			if strings.HasPrefix(filterType, "control_tag") {
 				useSummaryIndex = false
 				break
 			}
@@ -82,6 +84,8 @@ func (backend ES2Backend) GetSuggestions(typeParam string, filters map[string][]
 		suggs, err = backend.getProfileSuggestions(client, typeParam, target, text, size, filters, useSummaryIndex)
 	} else if typeParam == "control" {
 		suggs, err = backend.getControlSuggestions(client, typeParam, target, text, size, filters)
+	} else if typeParam == "control_tag_key" || typeParam == "control_tag_value" {
+		suggs, err = backend.getControlTagsSuggestions(client, typeParam, target, text, size, filters, useSummaryIndex)
 	} else if suggestionFieldArray(typeParam) {
 		suggs, err = backend.getArrayAggSuggestions(client, typeParam, target, text, size, filters, useSummaryIndex)
 	} else {
@@ -499,6 +503,92 @@ func (backend ES2Backend) getControlSuggestions(client *elastic.Client, typePara
 			}
 		}
 	}
+	return suggs, nil
+}
+
+func (backend ES2Backend) getControlTagsSuggestions(client *elastic.Client, typeParam string, target string, text string, size int, filters map[string][]string, useSummaryIndex bool) ([]*reportingapi.Suggestion, error) {
+	esIndex, err := GetEsIndex(filters, useSummaryIndex, true)
+	if err != nil {
+		return nil, errors.Wrap(err, "getControlTagsSuggestions unable to get index dates")
+	}
+
+	boolQuery := backend.getFiltersQuery(filters, true)
+
+	var finalInnerQuery elastic.Query
+	if len(text) >= 2 {
+		finalInnerBoolQuery := elastic.NewBoolQuery()
+		finalInnerBoolQuery.Must(elastic.NewMatchQuery(fmt.Sprintf("%s.engram", target), text).Operator("or"))
+		finalInnerBoolQuery.Should(elastic.NewMatchQuery(fmt.Sprintf("%s.engram", target), text).Operator("and"))
+		finalInnerBoolQuery.Should(elastic.NewTermQuery(target, text).Boost(100))
+		finalInnerBoolQuery.Should(elastic.NewPrefixQuery(target, text).Boost(100))
+		finalInnerQuery = finalInnerBoolQuery
+	} else {
+		finalInnerQuery = elastic.NewExistsQuery(target)
+	}
+
+	outerBoolQuery := elastic.NewBoolQuery()
+	nestedBoolQuery := outerBoolQuery.Must(elastic.NewNestedQuery("profiles.controls.string_tags", finalInnerQuery))
+
+	hit := elastic.NewInnerHit().Size(size)
+	boolQuery = boolQuery.Must(elastic.NewNestedQuery("profiles.controls", nestedBoolQuery).InnerHit(hit))
+
+	searchSource := elastic.NewSearchSource().
+		Query(boolQuery).
+		FetchSource(false).
+		Size(size * 50) // Multiplying size to ensure that same profile with multiple versions is not limiting our suggestions to a lower number
+	// ^ Because we can't sort by max_score of the inner hits: https://discuss.elastic.co/t/nested-objects-hits-inner-hits-and-sorting/32565
+
+	source, err := searchSource.Source()
+	if err != nil {
+		return nil, errors.Wrap(err, "getControlTagsSuggestions unable to get Source")
+	}
+
+	LogQueryPartMin(esIndex, source, "getControlTagsSuggestions query")
+	//
+	//searchResult, err := client.Search().
+	//	SearchSource(searchSource).
+	//	Index(esIndex).
+	//	FilterPath(
+	//		"took",
+	//		"hits.total",
+	//		"hits.hits._id",
+	//		"hits.hits._score",
+	//		"hits.hits.inner_hits").
+	//	Do(context.Background())
+	//
+	//if err != nil {
+	//	logrus.Error("getControlTagsSuggestions search failed")
+	//	return nil, err
+	//}
+	//
+	//logrus.Debugf("Search query took %d milliseconds\n", searchResult.TookInMillis)
+
+	// Using this to avoid duplicate controls in the suggestions
+	//addedControls := make(map[string]bool)
+	suggs := make([]*reportingapi.Suggestion, 0)
+	//if searchResult != nil {
+	//	for _, hit := range searchResult.Hits.Hits {
+	//		if hit != nil {
+	//			for _, inner_hit := range hit.InnerHits {
+	//				if inner_hit != nil {
+	//					for _, hit2 := range inner_hit.Hits.Hits {
+	//						var c ControlSource
+	//						if hit2.Source != nil {
+	//							err := json.Unmarshal(*hit2.Source, &c)
+	//							if err == nil && c.ID != "" {
+	//								if !addedControls[c.ID] {
+	//									oneSugg := reportingapi.Suggestion{Id: c.ID, Text: c.Title, Score: float32(*hit2.Score)}
+	//									suggs = append(suggs, &oneSugg)
+	//									addedControls[c.ID] = true
+	//								}
+	//							}
+	//						}
+	//					}
+	//				}
+	//			}
+	//		}
+	//	}
+	//}
 	return suggs, nil
 }
 
