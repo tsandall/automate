@@ -213,7 +213,7 @@
         },
         {
           "id": "apache-02",
-          "code": "control 'apache-02' do\n  impact 1.0\n  title 'Apache should be enabled'\n  desc 'Configure apache service to be automatically started at boot time'\n  only_if { os[:family] != 'ubuntu' && os[:release] != '16.04' } || only_if { os[:family] != 'debian' && os[:release] != '8' }\n  describe service(apache.service) do\n    it { should be_enabled }\n  end\n  tag 'scoop': 'icetea'\nend\n",
+          "code": "control 'apache-02' do\n  impact 1.0\n  title 'Apache should be enabled'\n  desc 'Configure apache service to be automatically started at boot time'\n  only_if { os[:family] != 'ubuntu' && os[:release] != '16.04' } || only_if { os[:family] != 'debian' && os[:release] != '8' }\n  describe service(apache.service) do\n    it { should be_enabled }\n  end\n  tag 'Scoops': 'icey gelato'\nend\n",
           "desc": "Configure apache service to be automatically started at boot time",
           "impact": 1,
           "title": "Apache should be enabled",
@@ -223,7 +223,7 @@
           },
           "refs": [],
           "tags": {
-            "scoop": "icetea"
+            "Scoops": "ices gelato"
           },
           "results": [
             {
@@ -246,7 +246,7 @@
           },
           "refs": [],
           "tags": {
-            "scoop": "hot icetea"
+            "scoop": "italian gelato"
           },
           "results": [
             {
