@@ -1,118 +1,120 @@
-<app-settings-sidebar></app-settings-sidebar>
-<chef-loading-spinner *ngIf="loading$ | async" size='50' fixed></chef-loading-spinner>
+<div class="page-container">
+  <app-settings-sidebar sidebar></app-settings-sidebar>
+  <chef-loading-spinner *ngIf="loading$ | async" size='50' fixed></chef-loading-spinner>
 
-<div class="container">
-  <main>
-    <chef-page-header>
-      <chef-heading>Projects</chef-heading>
-      <chef-subheading>
-        Projects group resources together. Max of {{ MAX_PROJECTS }} projects allowed.
-      </chef-subheading>
-    </chef-page-header>
-    <section *ngIf="!(projectsEnabled$ | async)" class="page-body">
-      Currently, you are using IAM {{ iamMajorVersion$ | async }}. Projects are only available with IAM v2.1 or higher.
-    </section>
+  <div class="container">
+    <main>
+      <chef-page-header>
+        <chef-heading>Projects</chef-heading>
+        <chef-subheading>
+          Projects group resources together. Max of {{ MAX_PROJECTS }} projects allowed.
+        </chef-subheading>
+      </chef-page-header>
+      <section *ngIf="!(projectsEnabled$ | async)" class="page-body">
+        Currently, you are using IAM {{ iamMajorVersion$ | async }}. Projects are only available with IAM v2.1 or higher.
+      </section>
 
-    <section *ngIf="projectsEnabled$ | async" class="page-body">
-      <ng-container *ngIf="(sortedProjects$ | async)?.length > 0">
-        <chef-toolbar>
+      <section *ngIf="projectsEnabled$ | async" class="page-body">
+        <ng-container *ngIf="(sortedProjects$ | async)?.length > 0">
+          <chef-toolbar>
+            <app-authorized [allOf]="['/iam/v2beta/projects', 'post']">
+              <chef-button [disabled]="(sortedProjects$ | async)?.length >= MAX_PROJECTS"
+                data-cy="create-project" primary (click)="openCreateModal()">Create Project</chef-button>
+            </app-authorized>
+            <app-authorized [allOf]="['/iam/v2beta/apply-rules', 'post']">
+              <chef-button secondary [disabled]="isDisabled()"
+                id="update-start-button" (click)="openConfirmUpdateStartModal()">{{ getButtonText() }}</chef-button>
+            </app-authorized>
+            <app-authorized [allOf]="['/iam/v2beta/apply-rules', 'delete']">
+              <chef-button *ngIf="(projects.applyRulesStatus$ | async)?.state === ApplyRulesStatusState.Running"
+                [disabled]="cancelRulesInProgress"
+                tertiary id="update-stop-button" (click)="openConfirmUpdateStopModal()">Stop Updating Projects</chef-button>
+            </app-authorized>
+          </chef-toolbar>
+          <app-authorized [allOf]="['/iam/v2beta/projects', 'get']">
+            <chef-table>
+              <chef-thead>
+                <chef-tr>
+                  <chef-th>Name</chef-th>
+                  <chef-th>ID</chef-th>
+                  <chef-th>Ingest Rules</chef-th>
+                  <chef-th>Project Update Status</chef-th>
+                  <chef-th class="controls"></chef-th>
+                </chef-tr>
+              </chef-thead>
+              <chef-tbody>
+                <chef-tr *ngFor="let project of sortedProjects$ | async">
+                  <chef-td>
+                    <a [routerLink]="['/settings/projects', project.id]" data-cy="project-details">{{ project.name }}</a>
+                  </chef-td>
+                  <chef-td>{{ project.id }}</chef-td>
+                  <chef-td>{{ getRulesStatus(project) }}</chef-td>
+                  <chef-td>{{ getProjectStatus(project) }}</chef-td>
+                  <chef-td class="controls">
+                    <app-authorized [allOf]="['/iam/v2beta/projects/{id}', 'delete', project.id]">
+                      <chef-control-menu>
+                        <chef-option (click)="startProjectDelete(project)" data-cy="delete-project">Delete Project</chef-option>
+                      </chef-control-menu>
+                    </app-authorized>
+                  </chef-td>
+                </chef-tr>
+              </chef-tbody>
+            </chef-table>
+          </app-authorized>
+        </ng-container>
+        <ng-container *ngIf="(sortedProjects$ | async)?.length === 0">
           <app-authorized [allOf]="['/iam/v2beta/projects', 'post']">
-            <chef-button [disabled]="(sortedProjects$ | async)?.length >= MAX_PROJECTS"
-              data-cy="create-project" primary (click)="openCreateModal()">Create Project</chef-button>
+            <div class="empty-case-container">
+              <p>Create the first project to get started!</p>
+            </div>
+            <div class="empty-case-container">
+                <chef-button primary data-cy="create-project" (click)="openCreateModal()">Create Project</chef-button>
+            </div>
           </app-authorized>
-          <app-authorized [allOf]="['/iam/v2beta/apply-rules', 'post']">
-            <chef-button secondary [disabled]="isDisabled()"
-              id="update-start-button" (click)="openConfirmUpdateStartModal()">{{ getButtonText() }}</chef-button>
+          <app-authorized not [allOf]="['/iam/v2beta/projects', 'post']">
+            <div class="empty-case-container">
+              <p>It looks like no one has created any projects yet and you<br/>
+                don't have permission to create them.<br/><br/>
+                If this is a mistake, then reach out to your administrator.
+              </p>
+            </div>
           </app-authorized>
-          <app-authorized [allOf]="['/iam/v2beta/apply-rules', 'delete']">
-            <chef-button *ngIf="(projects.applyRulesStatus$ | async)?.state === ApplyRulesStatusState.Running"
-              [disabled]="cancelRulesInProgress"
-              tertiary id="update-stop-button" (click)="openConfirmUpdateStopModal()">Stop Updating Projects</chef-button>
-          </app-authorized>
-        </chef-toolbar>
-        <app-authorized [allOf]="['/iam/v2beta/projects', 'get']">
-          <chef-table>
-            <chef-thead>
-              <chef-tr>
-                <chef-th>Name</chef-th>
-                <chef-th>ID</chef-th>
-                <chef-th>Ingest Rules</chef-th>
-                <chef-th>Project Update Status</chef-th>
-                <chef-th class="controls"></chef-th>
-              </chef-tr>
-            </chef-thead>
-            <chef-tbody>
-              <chef-tr *ngFor="let project of sortedProjects$ | async">
-                <chef-td>
-                  <a [routerLink]="['/settings/projects', project.id]" data-cy="project-details">{{ project.name }}</a>
-                </chef-td>
-                <chef-td>{{ project.id }}</chef-td>
-                <chef-td>{{ getRulesStatus(project) }}</chef-td>
-                <chef-td>{{ getProjectStatus(project) }}</chef-td>
-                <chef-td class="controls">
-                  <app-authorized [allOf]="['/iam/v2beta/projects/{id}', 'delete', project.id]">
-                    <chef-control-menu>
-                      <chef-option (click)="startProjectDelete(project)" data-cy="delete-project">Delete Project</chef-option>
-                    </chef-control-menu>
-                  </app-authorized>
-                </chef-td>
-              </chef-tr>
-            </chef-tbody>
-          </chef-table>
-        </app-authorized>
-      </ng-container>
-      <ng-container *ngIf="(sortedProjects$ | async)?.length === 0">
-        <app-authorized [allOf]="['/iam/v2beta/projects', 'post']">
-          <div class="empty-case-container">
-            <p>Create the first project to get started!</p>
-          </div>
-          <div class="empty-case-container">
-              <chef-button primary data-cy="create-project" (click)="openCreateModal()">Create Project</chef-button>
-          </div>
-        </app-authorized>
-        <app-authorized not [allOf]="['/iam/v2beta/projects', 'post']">
-          <div class="empty-case-container">
-            <p>It looks like no one has created any projects yet and you<br/>
-              don't have permission to create them.<br/><br/>
-              If this is a mistake, then reach out to your administrator.
-            </p>
-          </div>
-        </app-authorized>
-      </ng-container>
-    </section>
+        </ng-container>
+      </section>
 
-    <app-create-object-modal
-      [visible]="createModalVisible"
-      [creating]="creatingProject"
-      [conflictErrorEvent]="conflictErrorEvent"
-      objectNoun="project"
-      [createForm]="createProjectForm"
-      (close)="closeCreateModal()"
-      (createClicked)="createProject()">
-    </app-create-object-modal>
+      <app-create-object-modal
+        [visible]="createModalVisible"
+        [creating]="creatingProject"
+        [conflictErrorEvent]="conflictErrorEvent"
+        objectNoun="project"
+        [createForm]="createProjectForm"
+        (close)="closeCreateModal()"
+        (createClicked)="createProject()">
+      </app-create-object-modal>
 
-    <app-delete-object-modal
-      [visible]="deleteModalVisible"
-      objectNoun="project"
-      [objectName]="projectToDelete?.id"
-      [moreDetails]="inUseMessage()"
-      (close)="closeDeleteModal()"
-      (deleteClicked)="deleteProject()"
-      objectAction="Delete">
-    </app-delete-object-modal>
+      <app-delete-object-modal
+        [visible]="deleteModalVisible"
+        objectNoun="project"
+        [objectName]="projectToDelete?.id"
+        [moreDetails]="inUseMessage()"
+        (close)="closeDeleteModal()"
+        (deleteClicked)="deleteProject()"
+        objectAction="Delete">
+      </app-delete-object-modal>
 
-    <app-confirm-apply-start-modal
-      [visible]="confirmApplyStartModalVisible"
-      (confirm)="confirmApplyStart()"
-      (cancel)="cancelApplyStart()">
-    </app-confirm-apply-start-modal>
+      <app-confirm-apply-start-modal
+        [visible]="confirmApplyStartModalVisible"
+        (confirm)="confirmApplyStart()"
+        (cancel)="cancelApplyStart()">
+      </app-confirm-apply-start-modal>
 
-    <app-confirm-apply-stop-modal
-      [visible]="confirmApplyStopModalVisible"
-      [applyRulesStatus]="projects.applyRulesStatus$ | async"
-      [stopRulesInProgress]="cancelRulesInProgress"
-      (confirm)="confirmApplyStop()"
-      (cancel)="cancelApplyStop()">
-    </app-confirm-apply-stop-modal>
-  </main>
+      <app-confirm-apply-stop-modal
+        [visible]="confirmApplyStopModalVisible"
+        [applyRulesStatus]="projects.applyRulesStatus$ | async"
+        [stopRulesInProgress]="cancelRulesInProgress"
+        (confirm)="confirmApplyStop()"
+        (cancel)="cancelApplyStop()">
+      </app-confirm-apply-stop-modal>
+    </main>
+  </div>
 </div>
