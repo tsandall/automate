@@ -29,7 +29,10 @@ node.master: {{cfg.node.master}}
 node.data: {{cfg.node.data}}
 
 path.logs: {{pkg.svc_var_path}}/{{cfg.path.logs}}
-path.data: {{pkg.svc_data_path}}/{{cfg.path.data}}
+path.data:
+  - {{pkg.svc_data_path}}/{{cfg.path.data}}
+  - {{pkg.svc_var_path}}
+
 {{#if cfg.path.repo ~}}
 path.repo: {{cfg.path.repo}}
 {{/if ~}}
