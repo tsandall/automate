@@ -6,6 +6,8 @@ import (
 	"github.com/chef/automate/lib/stringutils"
 	"github.com/olivere/elastic"
 	"github.com/sirupsen/logrus"
+	"regexp"
+	"strings"
 )
 
 //todo - this looks very close to the report depth version of it.. double check and if so lets' harmonize them
@@ -28,6 +30,29 @@ func (depth *ProfileDepth) getProfileMinsFromNodesAggs(filters map[string][]stri
 	return depth.wrap(aggs)
 }
 
+func nameMatchesFilter(filters []string, name string) bool {
+	logrus.Infof("nameMatchesFilter %s", name)
+	if len(filters) == 0 {
+		return true
+	}
+	for _, filter := range filters {
+		if filter == name {
+			return true
+		} else if strings.Contains(filter, "*") || strings.Contains(filter, "?") {
+			// wildcard matching
+			pattern := strings.ReplaceAll(filter, "*", ".*")
+			pattern = strings.ReplaceAll(pattern, "?", ".?")
+			pattern = "^" + pattern + "$"
+			regex := regexp.MustCompile(pattern)
+			logrus.Infof("regex %v", regex)
+			matches := regex.FindAllString(name, -1)
+			return len(matches) > 0
+		}
+	}
+
+	return false
+}
+
 //todo - this looks very close to the report depth version of it.. double check and if so lets' harmonize them
 func (depth *ProfileDepth) getProfileMinsFromNodesResults(
 	filters map[string][]string,
@@ -42,12 +67,16 @@ func (depth *ProfileDepth) getProfileMinsFromNodesResults(
 		totalsAgg, _ := aggRoot.Terms("totals")
 		if totalsAgg != nil {
 			for _, bucket := range totalsAgg.Buckets {
-				profileName, profileId := rightSplit(string(bucket.KeyNumber), "|") // bucket.KeyNumber
+				profileName, profileID := rightSplit(string(bucket.KeyNumber), "|") // bucket.KeyNumber
 
 				if profilesFilterArray, found := filters["profile_id"]; found {
-					if !stringutils.SliceContains(profilesFilterArray, profileId) {
+					if !stringutils.SliceContains(profilesFilterArray, profileID) {
 						continue
 					}
+				}
+
+				if !nameMatchesFilter(filters["profile_name"], profileName) {
+					continue
 				}
 
 				// Using the status of the profile, introduced with inspec 3.0 to overwrite the status calculations from totals
@@ -84,10 +113,10 @@ func (depth *ProfileDepth) getProfileMinsFromNodesResults(
 
 				summary := reporting.ProfileMin{
 					Name:   profileName,
-					ID:     profileId,
+					ID:     profileID,
 					Status: profileStatus,
 				}
-				profileMins[profileId] = summary
+				profileMins[profileID] = summary
 			}
 		}
 	}

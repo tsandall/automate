@@ -50,6 +50,10 @@ func (depth *ReportDepth) getProfileMinsFromNodesResults(
 						continue
 					}
 				}
+				logrus.Infof("report depth getProfileMinsFromNodesResults: %s", profileName)
+				if !nameMatchesFilter(filters["profile_name"], profileName) {
+					continue
+				}
 
 				// Using the status of the profile, introduced with inspec 3.0 to overwrite the status calculations from totals
 				profileStatusHash := make(map[string]int64, 0)

@@ -779,6 +779,7 @@ func (backend *ES2Backend) getControlItem(controlBucket *elastic.AggregationBuck
 //  return *elastic.BoolQuery
 func (backend ES2Backend) getFiltersQuery(filters map[string][]string, latestOnly bool) *elastic.BoolQuery {
 	utils.DeDupFilters(filters)
+	logrus.Infof("getFiltersQuery %v", filters)
 
 	typeQuery := elastic.NewTypeQuery(mappings.DocType)
 
