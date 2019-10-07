@@ -37,7 +37,7 @@ var ProjectPurgeDomainServices = []string{
 }
 
 // This workflow executor follows the pattern described in project_update_manager.go
-// in detail with one exception: it has a final serial task to execute after after all
+// with one exception: it has a final serial task to execute after all
 // the parallel tasks finish.
 //
 // Serial workflow 1: move project to graveyard
