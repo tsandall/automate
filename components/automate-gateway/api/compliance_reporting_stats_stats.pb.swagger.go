@@ -555,6 +555,10 @@ func init() {
         "nodes_cnt": {
           "type": "integer",
           "format": "int32"
+        },
+        "controls": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
