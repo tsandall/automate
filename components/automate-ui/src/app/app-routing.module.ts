@@ -2,8 +2,8 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 // Views
-import { ApiTokenDetailsComponent } from './pages/api-token/details/api-token-details.component';
-import { ApiTokenListComponent } from './pages/api-token/list/api-token-list.component';
+import { ApiTokenDetailsComponent } from './modules/token/token-details/api-token-details.component';
+import { ApiTokenListComponent } from './modules/token/token-list/api-token-list.component';
 import { ApplicationsComponent } from './pages/applications/applications.component';
 import { EventFeedComponent } from './pages/event-feed/event-feed.component';
 import { IntegrationsAddComponent } from './pages/integrations/add/integrations-add.component';
@@ -18,11 +18,6 @@ import { ClientRunsComponent } from './pages/client-runs/client-runs.component';
 import { NotificationsComponent } from './pages/notifications/notifications.component';
 import { NotificationFormComponent } from './pages/notification-form/notification-form.component';
 import { SigninComponent } from './pages/signin/signin.component';
-import { TeamAddUsersComponent } from './pages/team-add-users/team-add-users.component';
-import { TeamDetailsComponent } from './pages/team-details/team-details.component';
-import { TeamManagementComponent } from './pages/team-management/team-management.component';
-import { UserDetailsComponent } from './pages/user-details/user-details.component';
-import { UserManagementComponent } from './pages/user-management/user-management.component';
 
 // Components
 import { AutomateSettingsComponent } from './pages/automate-settings/automate-settings.component';
@@ -30,14 +25,14 @@ import { NodeDetailsComponent } from './pages/node-details/node-details.componen
 import {
   NodeNoRunsDetailsComponent
 } from './pages/node-noruns-details/node-noruns-details.component';
-import { PolicyListComponent } from './pages/policy/list/policy-list.component';
-import { PolicyDetailsComponent } from './pages/policy/details/policy-details.component';
-import { PolicyAddMembersComponent } from './pages/policy/add-members/policy-add-members.component';
+import { PolicyListComponent } from './modules/policy/list/policy-list.component';
+import { PolicyDetailsComponent } from './modules/policy/details/policy-details.component';
+import { PolicyAddMembersComponent } from './modules/policy/add-members/policy-add-members.component';
 import { ProjectDetailsComponent } from './pages/project/details/project-details.component';
 import { ProjectListComponent } from './pages/project/list/project-list.component';
 import { ProjectRulesComponent } from './pages/project/rules/project-rules.component';
-import { RolesListComponent } from './pages/roles/list/roles-list.component';
-import { RoleDetailsComponent } from './pages/roles/details/role-details.component';
+import { RolesListComponent } from './modules/roles/list/roles-list.component';
+import { RoleDetailsComponent } from './modules/roles/details/role-details.component';
 import { UIComponent } from 'app/ui.component';
 
 // Services
@@ -48,7 +43,6 @@ import {
 } from './services/node-details/node-noruns-details-resolver.service';
 
 // Other
-import { UserDetailsNonAdminResolve } from './pages/user-details/user-details.resolver';
 import { SettingsLandingComponent } from './pages/settings-landing/settings-landing.component';
 
 const routes: Routes = [
@@ -74,6 +68,10 @@ const routes: Routes = [
           component: AutomateSettingsComponent
         },
         {
+          path: 'teams',
+          loadChildren: './modules/team/team.module#ChefTeamModule'
+        },
+        {
           path: 'tokens',
           component: ApiTokenListComponent
         },
@@ -82,25 +80,8 @@ const routes: Routes = [
           component: ApiTokenDetailsComponent
         },
         {
-          path: 'teams',
-          component: TeamManagementComponent
-        },
-        {
-          path: 'teams/:id',
-          component: TeamDetailsComponent
-        },
-        {
-          path: 'teams/:id/add-users',
-          component: TeamAddUsersComponent,
-          data: { hideNavBar: true }
-        },
-        {
           path: 'users',
-          component: UserManagementComponent
-        },
-        {
-          path: 'users/:id',
-          component: UserDetailsComponent
+          loadChildren: './modules/user/user.module#ChefUserModule'
         },
         {
           path: 'policies',
@@ -185,11 +166,6 @@ const routes: Routes = [
           ]
         }
       ]
-    },
-    {
-      path: 'user-details/:id',
-      component: UserDetailsComponent,
-      resolve: { isNonAdmin: UserDetailsNonAdminResolve }
     },
     {
       path: 'compliance',

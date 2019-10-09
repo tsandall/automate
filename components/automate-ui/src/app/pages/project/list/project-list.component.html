@@ -1,9 +1,9 @@
-<div class="page-container">
+<div class="app-main-container">
   <app-settings-sidebar sidebar></app-settings-sidebar>
-  <chef-loading-spinner *ngIf="loading$ | async" size='50' fixed></chef-loading-spinner>
-
+  
   <div class="container">
     <main>
+      <chef-loading-spinner *ngIf="loading$ | async" size='50' fixed></chef-loading-spinner>
       <chef-page-header>
         <chef-heading>Projects</chef-heading>
         <chef-subheading>

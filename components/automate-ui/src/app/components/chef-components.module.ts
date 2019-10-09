@@ -31,6 +31,7 @@ import {
 } from './guitar-string-collection/guitar-string-section/guitar-string-section.component';
 import { InputDirective } from './input/input.directive';
 import { LandingComponent } from './landing/landing.component';
+import { ChefNotificationsComponent } from './notifications/notifications.component';
 import { PagePickerComponent } from './page-picker/page-picker.component';
 import { ProjectsDropdownComponent } from './projects-dropdown/projects-dropdown.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
@@ -71,6 +72,7 @@ import { ChefPipesModule } from '../pipes/chef-pipes.module';
     GuitarStringItemComponent,
     GuitarStringSectionComponent,
     LandingComponent,
+    ChefNotificationsComponent,
     PagePickerComponent,
     ProjectsDropdownComponent,
     SidebarComponent,
@@ -101,6 +103,7 @@ import { ChefPipesModule } from '../pipes/chef-pipes.module';
     GuitarStringSectionComponent,
     InputDirective,
     LandingComponent,
+    ChefNotificationsComponent,
     PagePickerComponent,
     ProjectsDropdownComponent,
     SidebarComponent,

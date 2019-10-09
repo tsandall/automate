@@ -1,12 +1,10 @@
 @import "~styles/variables";
 
-.notifications,
-.license-banner {
-  a {
-    color: $chef-white;
-  }
-}
+#app-header-container {
+  display: flex;
+  flex-flow: column nowrap;
 
-.notifications {
-  margin-left: $sidebar-width;
+  & > * {
+    flex: 1 100%;
+  }
 }

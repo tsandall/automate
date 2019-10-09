@@ -1,7 +1,8 @@
 @import "~styles/variables";
 
 header {
-
+  position: relative;
+  
   .cl-link {
     display: flex;
     position: fixed;

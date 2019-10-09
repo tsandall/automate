@@ -75,6 +75,11 @@ chef-alert {
   width: 100%;
 }
 
+chef-tbody {
+  overflow: scroll;
+  height: 432px;
+}
+
 chef-th,
 chef-td {
 

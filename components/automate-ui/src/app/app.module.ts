@@ -25,16 +25,19 @@ import {
 } from '@angular/platform-browser/animations';
 
 // Modules
-import { ApiTokenModule } from './pages/api-token/api-token.module';
+import { ApiTokenModule } from './modules/token/token.module';
 import { AppRoutingModule } from './app-routing.module';
 import { ChefComponentsModule } from './components/chef-components.module';
 import { ChefPipesModule } from './pipes/chef-pipes.module';
 import { ComplianceModule } from './pages/+compliance/compliance.module';
 import { ComplianceSharedModule } from './pages/+compliance/shared/shared.module';
 import { IntegrationsModule } from './pages/integrations/integrations.module';
-import { PolicyModule } from './pages/policy/policy.module';
+import { PolicyModule } from './modules/policy/policy.module';
 import { ProjectModule } from './pages/project/project.module';
-import { RoleModule } from './pages/roles/roles.module';
+import { RoleModule } from './modules/roles/roles.module';
+import { ChefLicenseModule } from 'app/modules/license/license.module';
+import { ChefUserModule } from 'app/modules/user/user.module';
+import { ChefTeamModule } from 'app/modules/team/team.module';
 
 // Services
 import { AttributesService } from './services/attributes/attributes.service';
@@ -81,7 +84,7 @@ import { ProjectsFilterRequests } from './services/projects-filter/projects-filt
 
 // Helpers
 import { HistorySelection } from './helpers/history-selection/history-selection';
-import { UserDetailsNonAdminResolve } from './pages/user-details/user-details.resolver';
+
 
 // Page Components
 import { AppComponent } from './app.component';
@@ -134,12 +137,12 @@ import {
   JobScheduleFormComponent
 } from './page-components/job-schedule-form/job-schedule-form.component';
 import { JsonTreeComponent } from './page-components/json-tree/json-tree.component';
-import {
-  LicenseApplyComponent
-} from './page-components/license-apply/license-apply.component';
-import {
-  LicenseLockoutComponent
-} from './page-components/license-lockout/license-lockout.component';
+// import {
+//   LicenseApplyComponent
+// } from './page-components/license-apply/license-apply.component';
+// import {
+//   LicenseLockoutComponent
+// } from './page-components/license-lockout/license-lockout.component';
 import { LogsModalComponent } from './page-components/logs-modal/logs-modal.component';
 import { MiniTableComponent } from './page-components/mini-table/mini-table.component';
 import { NavbarComponent } from './page-components/navbar/navbar.component';
@@ -184,20 +187,14 @@ import {
   SidebarSelectListComponent
 } from './page-components/sidebar-select-list/sidebar-select-list.component';
 import { SigninComponent } from './pages/signin/signin.component';
-import { TeamAddUsersComponent } from './pages/team-add-users/team-add-users.component';
-import { TeamDetailsComponent } from './pages/team-details/team-details.component';
 import {
   ServicesSidebarComponent
 } from './page-components/services-sidebar/services-sidebar.component';
-import { TeamManagementComponent } from './pages/team-management/team-management.component';
 import {
   TelemetryCheckboxComponent
 } from './page-components/telemetry-checkbox/telemetry-checkbox.component';
 import { UIComponent } from 'app/ui.component';
-import { UserDetailsComponent } from './pages/user-details/user-details.component';
-import { UserFormComponent } from './pages/user-management/user-form/user-form.component';
-import { UserManagementComponent } from './pages/user-management/user-management.component';
-import { UserTableComponent } from './page-components/user-table/user-table.component';
+
 import { WelcomeModalComponent } from './page-components/welcome-modal/welcome-modal.component';
 
 @NgModule({
@@ -229,8 +226,6 @@ import { WelcomeModalComponent } from './page-components/welcome-modal/welcome-m
     JobProfilesFormComponent,
     JobScheduleFormComponent,
     JsonTreeComponent,
-    LicenseApplyComponent,
-    LicenseLockoutComponent,
     LogsModalComponent,
     MiniTableComponent,
     NavbarComponent,
@@ -258,15 +253,8 @@ import { WelcomeModalComponent } from './page-components/welcome-modal/welcome-m
     SettingsLandingComponent,
     SidebarSelectListComponent,
     SigninComponent,
-    TeamAddUsersComponent,
-    TeamDetailsComponent,
-    TeamManagementComponent,
     TelemetryCheckboxComponent,
     UIComponent,
-    UserDetailsComponent,
-    UserFormComponent,
-    UserTableComponent,
-    UserManagementComponent,
     WelcomeModalComponent
   ],
   entryComponents: [
@@ -288,6 +276,9 @@ import { WelcomeModalComponent } from './page-components/welcome-modal/welcome-m
     NgrxEffectsModule,
     PolicyModule,
     ProjectModule,
+    ChefLicenseModule,
+    ChefUserModule,
+    ChefTeamModule,
     ReactiveFormsModule,
     RoleModule,
     StoreModule.forRoot(ngrxReducers, { runtimeChecks }),
@@ -336,7 +327,6 @@ import { WelcomeModalComponent } from './page-components/welcome-modal/welcome-m
     SidebarService,
     TeamRequests,
     TelemetryService,
-    UserDetailsNonAdminResolve,
     UserPermsRequests,
     UserRequests
   ],
